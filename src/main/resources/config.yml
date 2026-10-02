@@ -1,0 +1,48 @@
+# StackedArmadillos makes a stack of armadillos made by WildStacker behave
+# like the separate armadillos it holds. The defaults copy vanilla.
+# Run /sa reload after editing this file.
+
+# Worlds where the plugin works, for example [world, world_nether].
+# [] means every world. Write the names exactly, capital letters included.
+worlds: []
+
+# The most armadillos one stack can hold. 24 is the vanilla cramming limit,
+# the most mobs that fit in one block. Set the same number in the WildStacker
+# config, under entities, limits, ARMADILLO. 0 means no limit from this plugin.
+max-stack-size: 24
+
+# Only merge armadillos standing in the same block, so two farm stations next
+# to each other never mix.
+same-block-only: true
+
+infested:
+  # A stack hit by a campfire gets one Infested chance for each armadillo in
+  # it, so a stack of 24 spawns as many silverfish as 24 armadillos.
+  # With false, a stack spawns silverfish like a single armadillo.
+  enabled: true
+  # The chance of spawning silverfish on each hit. 0.1 is 10%, the vanilla value.
+  chance: 0.1
+  # How many silverfish spawn when the chance hits. 1 or 2 is the vanilla value.
+  min-silverfish: 1
+  max-silverfish: 2
+
+cramming:
+  # Armadillos inside a stack count for entity cramming, so a 25th armadillo
+  # pushed into a block with a stack of 24 dies like in vanilla. The biggest
+  # stacks in the block are kept.
+  enabled: true
+  # The most armadillos in one block. -1 uses the max_entity_cramming gamerule,
+  # which is 24 unless changed. 0 turns cramming off for stacks.
+  limit: -1
+  # The damage an armadillo over the limit takes on each hit. 6 is the vanilla
+  # value. A rolled up armadillo takes (damage - 1) / 2.
+  damage: 6.0
+  # How often to check, in ticks. 20 ticks are one second, so 4 means five
+  # times a second, about as fast as vanilla cramming.
+  interval-ticks: 4
+
+scutes:
+  # A stack drops one scute for each armadillo in it, every 5 to 10 minutes.
+  # Brushing always gives one scute, like in vanilla. If your WildStacker
+  # version has multiply-armadillo-scutes, set it to false.
+  enabled: true

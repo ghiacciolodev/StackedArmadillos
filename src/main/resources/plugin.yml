@@ -1,0 +1,20 @@
+name: StackedArmadillos
+version: '${version}'
+main: dev.ghiacciolo.stackedarmadillos.StackedArmadillos
+api-version: '26.2'
+depend: [WildStacker]
+description: Makes stacked armadillos behave like the armadillos they stand for.
+author: ghiacciolodev
+website: https://github.com/ghiacciolodev/StackedArmadillos
+
+commands:
+  stackedarmadillos:
+    description: Manage StackedArmadillos.
+    usage: /<command> <reload|status>
+    aliases: [sa]
+    permission: stackedarmadillos.admin
+
+permissions:
+  stackedarmadillos.admin:
+    description: Allows using /stackedarmadillos.
+    default: op
