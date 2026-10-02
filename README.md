@@ -111,7 +111,7 @@ Steps:
 
 ### WildStacker settings
 
-These go in `plugins/WildStacker/config.yml`, in the `entities` section. The first two are needed:
+These go in `plugins/WildStacker/config.yml`, in the `entities` section. All three are needed:
 
 ```yaml
 entities:
@@ -119,8 +119,10 @@ entities:
     ARMADILLO: 1
   limits:
     ARMADILLO: 24
+  stack-interval: 100
 ```
 
+- **`stack-interval: 100`**: how often, in ticks, WildStacker tries again to stack mobs that are already in the world. With `0` it only tries when a mob spawns, but armadillos are usually walked, pushed or led into a farm, so they would never be stacked. 100 ticks is every 5 seconds.
 - **`merge-radius ARMADILLO: 1`**: WildStacker looks for armadillos to merge within this many blocks. With a bigger number, armadillos of two stations close to each other get merged together, and one station empties into the other. StackedArmadillos blocks those merges, but WildStacker doesn't look for another armadillo after a merge is blocked, so the station would simply stop stacking.
 - **`limits ARMADILLO: 24`**: the largest stack WildStacker builds. Without it, WildStacker keeps trying to add armadillos to a full stack, StackedArmadillos refuses, and the new armadillos stay unstacked.
 
@@ -132,12 +134,9 @@ entities:
   whitelist:
   - CHICKEN
   - ARMADILLO
-  # A station is stacked only once it has at least 15 armadillos.
-  # Smaller groups stay as single armadillos.
-  minimum-required:
-    ARMADILLO: 15
   stack-checks:
-    # Babies and adults are never merged.
+    # Babies and adults are never merged. A baby joins the stack of the
+    # adults once it grows up.
     AGE: true
     # A mob with a name tag is never merged, so its name is never lost.
     NAME_TAG: true
@@ -145,6 +144,8 @@ spawners:
   # Spawners placed next to each other stay separate spawners.
   enabled: false
 ```
+
+Be careful with `minimum-required`: it counts babies and adults separately, because they can't be merged. With `ARMADILLO: 15`, a station with 11 adults and 5 babies is never stacked, even if it has 16 armadillos. Keep it low for armadillos, or leave armadillos out of it.
 
 If a later WildStacker version has the option `multiply-armadillo-scutes`, set it to `false`. Otherwise both plugins multiply the scutes and a stack of 24 drops 576.
 

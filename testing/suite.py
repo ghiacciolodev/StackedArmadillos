@@ -46,7 +46,8 @@ def write_config(max_stack=24, same_block=True, infested=True, cramming=True, li
 
 
 def wildstacker(radius, limit):
-    """Sets the armadillo merge radius and stack limit in WildStacker. None removes the line."""
+    """Sets the armadillo merge radius and stack limit in WildStacker. None removes the line.
+    Also sets the entities stack-interval to 100, as the README asks."""
     with open(WILDSTACKER_CONFIG, encoding='utf-8') as f:
         text = f.read()
     start = text.index('\nentities:')
@@ -64,9 +65,12 @@ def wildstacker(radius, limit):
         if section in values and line == f'  {section}:' and values[section] is not None:
             out.append(f'    ARMADILLO: {values[section]}')
             values[section] = None
+    entities = re.sub(r'\n  stack-interval: \d+', '\n  stack-interval: 100', '\n'.join(out), count=1)
     with open(WILDSTACKER_CONFIG, 'w', encoding='utf-8') as f:
-        f.write(head + '\n'.join(out))
+        f.write(head + entities)
     rc('stacker reload')
+    # WildStacker applies the new settings shortly after the command returns.
+    time.sleep(2)
 
 
 def block(x, z):
