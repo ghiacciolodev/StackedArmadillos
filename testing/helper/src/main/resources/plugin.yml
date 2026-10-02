@@ -1,0 +1,8 @@
+name: SaTest
+version: '1.0'
+main: satest.SaTest
+api-version: '26.2'
+depend: [WildStacker]
+commands:
+  satest:
+    permission: satest.use
