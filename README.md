@@ -1,6 +1,10 @@
+<img src="docs/icon.png" width="96" align="right" alt="">
+
 # StackedArmadillos
 
-A Paper plugin that lets armadillo farms use [WildStacker](https://github.com/BG-Software-LLC/WildStacker) without changing how they work. A stack of 24 armadillos becomes one entity for the server, but it keeps behaving like 24 armadillos: it spawns the same silverfish, drops the same scutes and follows the same cramming rule.
+**Download:** [Hangar](https://hangar.papermc.io/ghiacciolodev/StackedArmadillos) · [GitHub Releases](https://github.com/ghiacciolodev/StackedArmadillos/releases)
+
+An addon for [WildStacker](https://github.com/BG-Software-LLC/WildStacker), for Paper 26.2, that lets armadillo farms use stacking without changing how they work. A stack of 24 armadillos becomes one entity for the server, but it keeps behaving like 24 armadillos: it spawns the same silverfish, drops the same scutes and follows the same cramming rule.
 
 ## Why it exists
 
