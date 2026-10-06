@@ -1,6 +1,5 @@
 package dev.ghiacciolo.stackedarmadillos;
 
-import com.bgsoftware.wildstacker.api.WildStackerAPI;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -72,7 +71,7 @@ final class ScuteListener implements Listener {
         if (!current.scutesEnabled() || !current.isActiveIn(armadillo.getWorld())) {
             return;
         }
-        int stackAmount = WildStackerAPI.getEntityAmount(armadillo);
+        int stackAmount = Stacks.amount(armadillo);
         if (stackAmount > 1) {
             multiply(event.getItemDrop(), stackAmount);
         }

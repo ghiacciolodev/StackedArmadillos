@@ -1,6 +1,5 @@
 package dev.ghiacciolo.stackedarmadillos;
 
-import com.bgsoftware.wildstacker.api.WildStackerAPI;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Supplier;
 import org.bukkit.Location;
@@ -43,7 +42,7 @@ final class InfestedListener implements Listener {
             return;
         }
 
-        int stackAmount = WildStackerAPI.getEntityAmount(armadillo);
+        int stackAmount = Stacks.amount(armadillo);
         ThreadLocalRandom random = ThreadLocalRandom.current();
         for (int roll = 1; roll < stackAmount; roll++) {
             if (random.nextFloat() <= current.infestedChance()) {

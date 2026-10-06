@@ -1,6 +1,5 @@
 package dev.ghiacciolo.stackedarmadillos;
 
-import com.bgsoftware.wildstacker.api.WildStackerAPI;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -169,7 +168,7 @@ public final class StackedArmadillos extends JavaPlugin implements TabExecutor, 
                 int biggest = 0;
                 for (World world : getServer().getWorlds()) {
                     for (Armadillo armadillo : world.getEntitiesByClass(Armadillo.class)) {
-                        int amount = WildStackerAPI.getEntityAmount(armadillo);
+                        int amount = Stacks.amount(armadillo);
                         entities++;
                         armadillos += amount;
                         biggest = Math.max(biggest, amount);

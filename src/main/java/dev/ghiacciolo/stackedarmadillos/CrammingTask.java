@@ -1,6 +1,5 @@
 package dev.ghiacciolo.stackedarmadillos;
 
-import com.bgsoftware.wildstacker.api.WildStackerAPI;
 import com.bgsoftware.wildstacker.api.objects.StackedEntity;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -71,7 +70,10 @@ final class CrammingTask implements Runnable {
             int total = 0;
             boolean hasStack = false;
             for (Armadillo armadillo : block) {
-                StackedEntity stack = WildStackerAPI.getStackedEntity(armadillo);
+                StackedEntity stack = Stacks.of(armadillo);
+                if (stack == null) {
+                    continue; // An NPC or another plugin's mob, not a real armadillo.
+                }
                 int amount = stack.getStackAmount();
                 members.add(new Member(armadillo, stack, amount));
                 total += amount;

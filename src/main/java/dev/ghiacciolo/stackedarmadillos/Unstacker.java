@@ -1,6 +1,5 @@
 package dev.ghiacciolo.stackedarmadillos;
 
-import com.bgsoftware.wildstacker.api.WildStackerAPI;
 import com.bgsoftware.wildstacker.api.objects.StackedEntity;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +74,10 @@ final class Unstacker implements Listener {
         if (!entity.isValid()) {
             return;
         }
-        StackedEntity stack = WildStackerAPI.getStackedEntity(entity);
+        StackedEntity stack = Stacks.of(entity);
+        if (stack == null) {
+            return;
+        }
         int amount = stack.getStackAmount();
         // isCached is false for mobs WildStacker would no longer stack.
         if (amount <= 1 || stack.isCached()) {
