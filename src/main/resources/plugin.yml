@@ -10,7 +10,7 @@ website: https://github.com/ghiacciolodev/StackedArmadillos
 commands:
   stackedarmadillos:
     description: Manage StackedArmadillos.
-    usage: /<command> <reload|status>
+    usage: /<command> <reload|status|unstack>
     aliases: [sa]
     permission: stackedarmadillos.admin
 

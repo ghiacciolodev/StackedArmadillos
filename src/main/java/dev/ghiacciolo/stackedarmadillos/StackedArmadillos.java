@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -26,6 +27,7 @@ public final class StackedArmadillos extends JavaPlugin implements TabExecutor, 
     // Read from async WildStacker events too, so always replaced as a whole.
     private volatile Settings settings;
     private BukkitTask crammingTask;
+    private Unstacker unstacker;
 
     @Override
     public void onEnable() {
@@ -49,6 +51,8 @@ public final class StackedArmadillos extends JavaPlugin implements TabExecutor, 
         plugins.registerEvents(new StackLimitListener(() -> settings), this);
         plugins.registerEvents(new InfestedListener(() -> settings), this);
         plugins.registerEvents(new ScuteListener(this, () -> settings), this);
+        unstacker = new Unstacker(this);
+        plugins.registerEvents(unstacker, this);
         startCrammingTask();
 
         PluginCommand command = getCommand("stackedarmadillos");
@@ -144,7 +148,7 @@ public final class StackedArmadillos extends JavaPlugin implements TabExecutor, 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length != 1) {
-            sender.sendMessage("Usage: /" + label + " <reload|status>");
+            sender.sendMessage("Usage: /" + label + " <reload|status|unstack>");
             return true;
         }
 
@@ -183,7 +187,21 @@ public final class StackedArmadillos extends JavaPlugin implements TabExecutor, 
                     sender.sendMessage("Warning: " + warning);
                 }
             }
-            default -> sender.sendMessage("Usage: /" + label + " <reload|status>");
+            case "unstack" -> {
+                boolean wasWatching = unstacker.isWatching();
+                Map<String, Integer> split = unstacker.start(getServer().getWorlds());
+                if (split.isEmpty()) {
+                    sender.sendMessage("No stacks to split in the loaded chunks.");
+                } else {
+                    sender.sendMessage("Split the stacks of mobs WildStacker no longer stacks: " + split + ".");
+                    getLogger().info(sender.getName() + " split stacks: " + split);
+                }
+                if (!wasWatching) {
+                    sender.sendMessage("Chunks loaded from now on are checked too, until the next restart. "
+                            + "Their splits are written in the log.");
+                }
+            }
+            default -> sender.sendMessage("Usage: /" + label + " <reload|status|unstack>");
         }
         return true;
     }
@@ -191,7 +209,7 @@ public final class StackedArmadillos extends JavaPlugin implements TabExecutor, 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 1) {
-            return List.of("reload", "status").stream()
+            return List.of("reload", "status", "unstack").stream()
                     .filter(option -> option.startsWith(args[0].toLowerCase(Locale.ROOT)))
                     .toList();
         }

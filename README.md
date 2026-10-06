@@ -91,7 +91,19 @@ Brushing is not multiplied, whether a player or a dispenser does it. In vanilla 
 
 ### What it doesn't touch
 
-Single armadillos, chickens and every other mob are left to vanilla. The plugin only changes armadillos that WildStacker has stacked.
+Single armadillos, chickens and every other mob are left to vanilla. The plugin only changes armadillos that WildStacker has stacked. The one exception is `/sa unstack`, described below, which an admin runs by hand.
+
+### Splitting stacks of other mobs
+
+Changing the WildStacker whitelist only affects new merges: mobs that were already stacked stay stacked. If other mobs got stacked by mistake, for example after loading the default WildStacker config, `/sa unstack` splits them back:
+
+- it splits every stack of a mob that WildStacker no longer stacks, so the farm mobs on the whitelist are left alone
+- each copy keeps the data of the stack, like its color, variant and age
+- the copies are spread over the free blocks around the stack, at most 8 per block, so vanilla cramming doesn't kill them
+- the `x30 Cow` name of the stack is removed, while a name given with a name tag is kept
+- stacks in chunks that are not loaded are split when the chunk loads, until the next restart, and each split is written in the log
+
+A stack only keeps one mob: the others are a number. Splitting it makes copies of that mob, so mobs that were different before being stacked, like villagers with different trades, come back as copies of the first one. The default WildStacker checks prevent most of these merges, for example sheep of different colors or villagers with different professions.
 
 ## Performance
 
@@ -218,8 +230,9 @@ scutes:
 | --- | --- |
 | `/sa status` | Shows the settings, how many armadillos and stacks are loaded, how many armadillos the stacks hold, and any warning about the WildStacker config. |
 | `/sa reload` | Reloads the config and checks the WildStacker config again. |
+| `/sa unstack` | Splits the stacks of mobs WildStacker no longer stacks, see [Splitting stacks of other mobs](#splitting-stacks-of-other-mobs). |
 
-`/sa` is short for `/stackedarmadillos`. Both commands need the permission `stackedarmadillos.admin`, which operators have by default.
+`/sa` is short for `/stackedarmadillos`. All commands need the permission `stackedarmadillos.admin`, which operators have by default.
 
 ## Test results
 
