@@ -5,6 +5,7 @@
 <h1 align="center">StackedArmadillos</h1>
 
 <p align="center">
+  <a href="https://modrinth.com/plugin/stackedarmadillos">Modrinth</a> ·
   <a href="https://hangar.papermc.io/ghiacciolodev/StackedArmadillos">Hangar</a> ·
   <a href="https://github.com/ghiacciolodev/StackedArmadillos/releases">GitHub Releases</a>
 </p>
