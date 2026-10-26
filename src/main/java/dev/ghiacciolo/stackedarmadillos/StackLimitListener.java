@@ -9,10 +9,10 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 /**
- * Stops two armadillo stacks from merging when the result would be over
- * max-stack-size, or when they are in different blocks. A merge removes one of
- * the two entities, so without the block check an armadillo could end up in
- * the stack of the farm station next to it.
+ * Stops any merge inside a no-stack area. For armadillos it also stops merges
+ * over max-stack-size, or between different blocks. A merge removes one of the
+ * two entities, so without the block check an armadillo could end up in the
+ * stack of the farm station next to it.
  */
 final class StackLimitListener implements Listener {
 
@@ -25,11 +25,16 @@ final class StackLimitListener implements Listener {
     // WildStacker may call this off the main thread, so only read values here.
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onStack(EntityStackEvent event) {
-        if (!(event.getEntity().getLivingEntity() instanceof Armadillo armadillo)) {
+        Settings current = settings.get();
+        // Any mob, whitelisted or not, if either side of the merge is in an area.
+        if (current.noStackAreaAt(event.getEntity().getLivingEntity().getLocation()) != null
+                || current.noStackAreaAt(event.getTarget().getLivingEntity().getLocation()) != null) {
+            event.setCancelled(true);
             return;
         }
-        Settings current = settings.get();
-        if (!current.isActiveIn(armadillo.getWorld())) {
+
+        if (!(event.getEntity().getLivingEntity() instanceof Armadillo armadillo)
+                || !current.isActiveIn(armadillo.getWorld())) {
             return;
         }
         int merged = event.getEntity().getStackAmount() + event.getTarget().getStackAmount();

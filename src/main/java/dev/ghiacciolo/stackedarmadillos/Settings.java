@@ -3,6 +3,7 @@ package dev.ghiacciolo.stackedarmadillos;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -19,7 +20,8 @@ record Settings(
         int crammingLimit,
         double crammingDamage,
         int crammingInterval,
-        boolean scutesEnabled) {
+        boolean scutesEnabled,
+        List<NoStackArea> noStackAreas) {
 
     /** Reads the config, fixing values that make no sense and reporting them in warnings. */
     static Settings load(FileConfiguration config, List<String> warnings) {
@@ -59,11 +61,22 @@ record Settings(
                 config.getInt("cramming.limit", -1),
                 Math.max(0, config.getDouble("cramming.damage", 6.0)),
                 interval,
-                config.getBoolean("scutes.enabled", true));
+                config.getBoolean("scutes.enabled", true),
+                NoStackArea.load(config.getConfigurationSection("no-stack-areas"), warnings));
     }
 
     boolean isActiveIn(World world) {
         return worlds.isEmpty() || worlds.contains(world.getName());
+    }
+
+    /** The no-stack area a location is in, or null. */
+    NoStackArea noStackAreaAt(Location location) {
+        for (NoStackArea area : noStackAreas) {
+            if (area.contains(location)) {
+                return area;
+            }
+        }
+        return null;
     }
 
     String describe() {
@@ -72,7 +85,8 @@ record Settings(
                 + ", same block only: " + onOff(sameBlockOnly)
                 + ", infested: " + onOff(infestedEnabled)
                 + ", cramming: " + (crammingEnabled ? (crammingLimit < 0 ? "gamerule" : crammingLimit) : "off")
-                + ", scutes: " + onOff(scutesEnabled) + ".";
+                + ", scutes: " + onOff(scutesEnabled)
+                + ", no-stack areas: " + noStackAreas.size() + ".";
     }
 
     private static String onOff(boolean value) {

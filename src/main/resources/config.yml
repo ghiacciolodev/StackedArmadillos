@@ -41,6 +41,19 @@ cramming:
   # times a second, about as fast as vanilla cramming.
   interval-ticks: 4
 
+# Places where nothing is stacked, not even the mobs on the WildStacker
+# whitelist, so every mob there stays a single vanilla mob. Each area has a
+# name, a world and two opposite corners as X Z block coordinates, and goes
+# from the bottom to the top of the world. Stacks already inside an area are
+# split with /sa unstack. Example:
+#
+# no-stack-areas:
+#   chicken-farm:
+#     world: world
+#     from: -1600 -630
+#     to: -1580 -600
+no-stack-areas: {}
+
 scutes:
   # A stack drops one scute for each armadillo in it, every 5 to 10 minutes.
   # Brushing always gives one scute, like in vanilla. If your WildStacker

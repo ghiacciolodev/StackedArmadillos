@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Supplier;
 import java.util.logging.Logger;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
@@ -21,8 +22,9 @@ import org.bukkit.plugin.Plugin;
 
 /**
  * Splits the stacks of mobs that WildStacker no longer stacks, for example
- * after the whitelist was changed. WildStacker keeps those stacks as they are,
- * so a mob type taken off the whitelist stays stacked forever.
+ * after the whitelist was changed, and the stacks inside no-stack areas.
+ * WildStacker keeps existing stacks as they are, so without this they would
+ * stay stacked forever.
  */
 final class Unstacker implements Listener {
 
@@ -31,10 +33,12 @@ final class Unstacker implements Listener {
     private static final int SPREAD_RADIUS = 2;
 
     private final Logger logger;
+    private final Supplier<Settings> settings;
     private boolean watching;
 
-    Unstacker(Plugin plugin) {
+    Unstacker(Plugin plugin, Supplier<Settings> settings) {
         this.logger = plugin.getLogger();
+        this.settings = settings;
     }
 
     /** Splits the stacks in all loaded chunks and keeps splitting in chunks loaded later. */
@@ -80,7 +84,7 @@ final class Unstacker implements Listener {
         }
         int amount = stack.getStackAmount();
         // isCached is false for mobs WildStacker would no longer stack.
-        if (amount <= 1 || stack.isCached()) {
+        if (amount <= 1 || (stack.isCached() && settings.get().noStackAreaAt(entity.getLocation()) == null)) {
             return;
         }
 

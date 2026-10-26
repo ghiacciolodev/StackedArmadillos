@@ -92,13 +92,25 @@ Brushing is not multiplied, whether a player or a dispenser does it. In vanilla 
 
 ### What it doesn't touch
 
-Single armadillos, chickens and every other mob are left to vanilla. The plugin only changes armadillos that WildStacker has stacked. The one exception is `/sa unstack`, described below, which an admin runs by hand.
+Single armadillos, chickens and every other mob are left to vanilla. The plugin only changes armadillos that WildStacker has stacked. The exceptions are the no-stack areas and `/sa unstack`, described below, which an admin sets up by hand.
+
+### No-stack areas
+
+Some places can be kept fully vanilla, for example a farm whose owner wants every mob as a single mob. In a no-stack area nothing is stacked, not even the mobs on the WildStacker whitelist like chickens and armadillos:
+
+- an area is a rectangle given by two opposite corners, as X Z block coordinates, and goes from the bottom to the top of the world
+- a merge is blocked when either of the two mobs is inside the area
+- stacks that were already inside an area, or that walk into it, are split with `/sa unstack`
+
+Areas can be made from the game, like a WorldEdit selection: stand on one corner and run `/sa area pos1`, stand on the opposite corner and run `/sa area pos2`, then run `/sa area add <name>`. The area is saved in the config and works right away. `/sa area remove <name>` deletes it, `/sa area list` lists them and `/sa area here` tells whether you are standing in one.
+
+Areas can also be written in the config, see [Configuration](#configuration), and reloaded with `/sa reload`.
 
 ### Splitting stacks of other mobs
 
 Changing the WildStacker whitelist only affects new merges: mobs that were already stacked stay stacked. If other mobs got stacked by mistake, for example after loading the default WildStacker config, `/sa unstack` splits them back:
 
-- it splits every stack of a mob that WildStacker no longer stacks, so the farm mobs on the whitelist are left alone
+- it splits every stack of a mob that WildStacker no longer stacks, and every stack inside a no-stack area, so the farm mobs on the whitelist are left alone everywhere else
 - each copy keeps the data of the stack, like its color, variant and age
 - the copies are spread over the free blocks around the stack, at most 8 per block, so vanilla cramming doesn't kill them
 - the `x30 Cow` name of the stack is removed, while a name given with a name tag is kept
@@ -206,9 +218,22 @@ cramming:
   # How often to check, in ticks. 20 ticks = 1 second.
   interval-ticks: 4
 
+# Places where nothing is stacked. {} means none.
+no-stack-areas: {}
+
 scutes:
   # A stack drops one scute for each armadillo in it.
   enabled: true
+```
+
+A no-stack area has a name, a world and two opposite corners. For example:
+
+```yaml
+no-stack-areas:
+  chicken-farm:
+    world: world
+    from: -1600 -630
+    to: -1580 -600
 ```
 
 | Setting | Default | What it means |
@@ -223,15 +248,21 @@ scutes:
 | `cramming.limit` | `-1` | The most armadillos in one block. `-1` uses the `max_entity_cramming` gamerule of the world, which is 24 unless changed. `0` turns cramming off for stacks. |
 | `cramming.damage` | `6.0` | The damage an armadillo over the limit takes on each hit. `6` is the vanilla value. A rolled up armadillo takes less, `(damage - 1) / 2`, so it dies after a few hits. |
 | `cramming.interval-ticks` | `4` | How often the plugin checks the blocks. 20 ticks are one second, so 4 means 5 times a second, about as fast as vanilla cramming. |
+| `no-stack-areas` | `{}` | Places where no mob is stacked, see [No-stack areas](#no-stack-areas). `from` and `to` are two opposite corners as X Z, in any order. The name is only used in `/sa status` and in warnings. |
 | `scutes.enabled` | `true` | A stack drops one scute for each armadillo in it. Brushing always gives one scute. |
 
 ## Commands and permissions
 
 | Command | What it does |
 | --- | --- |
-| `/sa status` | Shows the settings, how many armadillos and stacks are loaded, how many armadillos the stacks hold, and any warning about the WildStacker config. |
-| `/sa reload` | Reloads the config and checks the WildStacker config again. |
-| `/sa unstack` | Splits the stacks of mobs WildStacker no longer stacks, see [Splitting stacks of other mobs](#splitting-stacks-of-other-mobs). |
+| `/sa status` | Shows the settings, the no-stack areas, how many armadillos and stacks are loaded, how many armadillos the stacks hold, and any warning about the WildStacker config. |
+| `/sa reload` | Reloads the config, including the no-stack areas, and checks the WildStacker config again. |
+| `/sa unstack` | Splits the stacks of mobs WildStacker no longer stacks and the stacks inside no-stack areas, see [Splitting stacks of other mobs](#splitting-stacks-of-other-mobs). |
+| `/sa area pos1` and `/sa area pos2` | Set the two corners of a new no-stack area where you are standing. |
+| `/sa area add <name>` | Saves a no-stack area between the two corners. From the console: `/sa area add <name> <world> <x1> <z1> <x2> <z2>`. Names use lowercase letters, numbers, `-` and `_`. |
+| `/sa area remove <name>` | Deletes a no-stack area. |
+| `/sa area list` | Lists the no-stack areas. |
+| `/sa area here` | Tells whether you are standing in a no-stack area, and which one. |
 
 `/sa` is short for `/stackedarmadillos`. All commands need the permission `stackedarmadillos.admin`, which operators have by default.
 
