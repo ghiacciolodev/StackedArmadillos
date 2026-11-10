@@ -12,7 +12,7 @@ Don't run them on a server with players. They build stations, summon and remove 
 
 ## Setting up the test server
 
-1. Use a fresh Paper 26.2 server with a flat world. The script expects the ground at y -61, which is the default flat world. In `server.properties`:
+1. Use a fresh Paper 26.2 or 26.3 server with a flat world. The script expects the ground at y -61, which is the default flat world. In `server.properties`:
 
    ```
    level-type=minecraft\:flat
@@ -27,7 +27,7 @@ Don't run them on a server with players. They build stations, summon and remove 
    ./gradlew -p testing/helper build
    ```
 
-3. Put `build/libs/StackedArmadillos-<version>.jar`, `testing/helper/build/libs/SaTest.jar` and WildStacker 2026.2 in the server's `plugins` folder, then start the server once so WildStacker writes its config.
+3. Put `build/libs/StackedArmadillos-<version>.jar`, `testing/helper/build/libs/SaTest.jar` and WildStacker (2026.2 on Paper 26.2, 2026.3 on Paper 26.3) in the server's `plugins` folder, then start the server once so WildStacker writes its config.
 
 The script needs Python 3.10 or newer, with no extra packages.
 

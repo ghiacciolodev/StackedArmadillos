@@ -47,7 +47,8 @@ def write_config(max_stack=24, same_block=True, infested=True, cramming=True, li
 
 def wildstacker(radius, limit):
     """Sets the armadillo merge radius and stack limit in WildStacker. None removes the line.
-    Also sets the entities stack-interval to 100, as the README asks."""
+    Also sets the entities stack-interval to 100 and multiply-armadillo-scutes to false, as the
+    README asks."""
     with open(WILDSTACKER_CONFIG, encoding='utf-8') as f:
         text = f.read()
     start = text.index('\nentities:')
@@ -66,6 +67,8 @@ def wildstacker(radius, limit):
             out.append(f'    ARMADILLO: {values[section]}')
             values[section] = None
     entities = re.sub(r'\n  stack-interval: \d+', '\n  stack-interval: 100', '\n'.join(out), count=1)
+    # WildStacker 2026.3 adds this option turned on, which would multiply the scutes twice.
+    entities = entities.replace('\n  multiply-armadillo-scutes: true', '\n  multiply-armadillo-scutes: false')
     with open(WILDSTACKER_CONFIG, 'w', encoding='utf-8') as f:
         f.write(head + entities)
     rc('stacker reload')
@@ -283,7 +286,7 @@ if selected('scutes'):
     found = dropped_item()
     check('scutes: a scute dropped next to the stack stays 1', found == 1, f'scutes={found}')
 
-    # WildStacker 2026.2 alone doesn't multiply armadillo scutes.
+    # WildStacker alone doesn't multiply armadillo scutes (2026.3 only with multiply-armadillo-scutes).
     write_config(scutes=False)
     found = shed('sc')
     check('scutes: without the plugin a stack of 24 sheds 1 scute', found == 1, f'scutes={found}')

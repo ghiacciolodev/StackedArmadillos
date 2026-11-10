@@ -12,8 +12,8 @@ repositories {
 }
 
 // Pinned to the builds the plugin was tested with, so builds are reproducible.
-val paperApiVersion = "26.2.build.129-stable"
-val wildStackerApiVersion = "2026.2"
+val paperApiVersion = "26.3.build.248-stable"
+val wildStackerApiVersion = "2026.3"
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:$paperApiVersion")

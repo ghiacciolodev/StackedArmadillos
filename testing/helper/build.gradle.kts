@@ -9,8 +9,8 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:26.2.build.129-stable")
-    compileOnly("com.bgsoftware:WildStackerAPI:2026.2")
+    compileOnly("io.papermc.paper:paper-api:26.3.build.248-stable")
+    compileOnly("com.bgsoftware:WildStackerAPI:2026.3")
 }
 
 java {

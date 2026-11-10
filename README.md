@@ -10,7 +10,7 @@
   <a href="https://github.com/ghiacciolodev/StackedArmadillos/releases">GitHub Releases</a>
 </p>
 
-An addon for [WildStacker](https://github.com/BG-Software-LLC/WildStacker), for Paper 26.2, that lets armadillo farms use stacking without changing how they work. A stack of 24 armadillos becomes one entity for the server, but it keeps behaving like 24 armadillos: it spawns the same silverfish, drops the same scutes and follows the same cramming rule.
+An addon for [WildStacker](https://github.com/BG-Software-LLC/WildStacker), for Paper 26.2 and 26.3, that lets armadillo farms use stacking without changing how they work. A stack of 24 armadillos becomes one entity for the server, but it keeps behaving like 24 armadillos: it spawns the same silverfish, drops the same scutes and follows the same cramming rule.
 
 ## Why it exists
 
@@ -38,7 +38,7 @@ The lag is handled by three plugins, each doing one job:
 WildStacker alone is not enough. For the game a stack is one armadillo, so a station of 24 would:
 
 - roll Infested once per hit instead of 24 times, and spawn about 1/24 of the silverfish
-- shed one scute every 5 to 10 minutes instead of 24 (WildStacker 2026.2 doesn't multiply armadillo scutes)
+- shed one scute every 5 to 10 minutes instead of 24 (WildStacker 2026.2 doesn't multiply armadillo scutes; 2026.3 does, see below)
 - never kill a 25th armadillo pushed into the block, because entity cramming counts entities and the stack is only one
 - take armadillos from the station next to it, because WildStacker merges armadillos up to 10 blocks apart by default
 
@@ -67,7 +67,7 @@ The number can be changed. It is set in three places, which should match:
 
 When a stack with Infested is hurt, vanilla rolls Infested once, as for any single mob. StackedArmadillos rolls it once more for every other armadillo in the stack, so a stack of 24 gets 24 rolls per hit like 24 separate armadillos.
 
-It copies the vanilla rules of Minecraft 26.2: 10% chance per roll, 1 or 2 silverfish, spawned in the middle of the armadillo and thrown towards where it looks. It rolls on the same hits vanilla does: after a hit a mob can't be hurt again for half a second, and that applies to the stack like to a single armadillo. The silverfish are spawned the same way as vanilla ones, so FrozenSilverfish and any other plugin see them as normal Infested silverfish.
+It copies the vanilla rules of Minecraft 26.2, which are the same in 26.3: 10% chance per roll, 1 or 2 silverfish, spawned in the middle of the armadillo and thrown towards where it looks. It rolls on the same hits vanilla does: after a hit a mob can't be hurt again for half a second, and that applies to the stack like to a single armadillo. The silverfish are spawned the same way as vanilla ones, so FrozenSilverfish and any other plugin see them as normal Infested silverfish.
 
 ### Cramming
 
@@ -132,9 +132,9 @@ StackedArmadillos is a normal plugin and is installed like any other. It works o
 
 Requirements:
 
-- Paper 26.2
+- Paper 26.2 or 26.3
 - Java 25
-- WildStacker 2026.2
+- WildStacker 2026.2 on Paper 26.2, WildStacker 2026.3 on Paper 26.3 (2026.2 doesn't start on 26.3)
 
 Steps:
 
@@ -181,7 +181,14 @@ spawners:
 
 Be careful with `minimum-required`: it counts babies and adults separately, because they can't be merged. With `ARMADILLO: 15`, a station with 11 adults and 5 babies is never stacked, even if it has 16 armadillos. Keep it low for armadillos, or leave armadillos out of it.
 
-If a later WildStacker version has the option `multiply-armadillo-scutes`, set it to `false`. Otherwise both plugins multiply the scutes and a stack of 24 drops 576.
+WildStacker 2026.3 adds the option `multiply-armadillo-scutes`, turned on, in the `entities` section. Set it to `false`:
+
+```yaml
+entities:
+  multiply-armadillo-scutes: false
+```
+
+Otherwise both plugins multiply the scutes and a stack of 24 drops 576.
 
 StackedArmadillos reads the WildStacker config when it starts and on `/sa reload`, and writes a warning in the log for each of these problems it finds.
 
@@ -269,6 +276,8 @@ no-stack-areas:
 ## Test results
 
 The plugin was tested on a local Paper 26.2 server (build 129) with WildStacker 2026.2, using the WildStacker config of our server with the settings above. The tests are in the [`testing`](testing) folder. All 19 checks passed.
+
+They were run again on Paper 26.3 (build 248) with WildStacker 2026.3 and `multiply-armadillo-scutes: false`, and all 19 checks passed. The numbers below are from the Paper 26.2 run.
 
 **Infested.** One station with 24 separate armadillos next to one with a stack of 24, campfires lit for 90 seconds:
 
